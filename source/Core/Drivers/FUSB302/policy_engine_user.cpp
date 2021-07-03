@@ -82,7 +82,7 @@ bool PolicyEngine::pdbs_dpm_evaluate_capability(const union pd_msg *capabilities
         }
 #endif
         // Fudge of 0.5 ohms to round up a little to account for other losses
-        if (min_resistance_ohmsx10 <= (tipResistance + 50)) {
+        if (min_resistance_ohmsx10 <= (tipResistance + 5)) {
           // This is a valid power source we can select as
           if (voltage_mv > bestIndexVoltage || bestIndex == 0xFF) {
             // Higher voltage and valid, select this instead
