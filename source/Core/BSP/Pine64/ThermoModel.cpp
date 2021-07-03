@@ -69,4 +69,4 @@ const uint16_t uVtoDegC[] = {
 
 const int uVtoDegCItems = sizeof(uVtoDegC) / (2 * sizeof(uint16_t));
 
-uint32_t TipThermoModel::convertuVToDegC(uint32_t tipuVDelta) { return Utils::InterpolateLookupTable(uVtoDegC, uVtoDegCItems, tipuVDelta); }
+uint32_t TipThermoModel::convertuVToDegC(uint32_t tipuVDelta) { return 0.172116f * tipuVDelta; }

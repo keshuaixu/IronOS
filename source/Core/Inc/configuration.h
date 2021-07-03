@@ -232,8 +232,8 @@ const uint8_t tipResistance = 75; // x10 ohms, 7.5 typical for ts100 tips
 #endif
 
 #ifdef MODEL_Pinecil
-const int32_t tipMass       = 45; // X10 watts to raise 1 deg C in 1 second
-const uint8_t tipResistance = 75; // x10 ohms, 7.5 typical for ts100 tips
+const int32_t tipMass       = 10; // X10 watts to raise 1 deg C in 1 second
+const uint8_t tipResistance = 29; // x10 ohms, 7.5 typical for ts100 tips
 #endif
 
 #ifdef MODEL_TS80
