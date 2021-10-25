@@ -7,9 +7,9 @@
 
 // Quick charge 3.0 supporting functions
 #include "QC3.h"
-
 #include "BSP.h"
 #include "cmsis_os.h"
+#include "configuration.h"
 #include "stdint.h"
 enum QCState {
   NOT_STARTED = 0, // Have not checked
@@ -54,31 +54,23 @@ void    seekQC(int16_t Vx10, uint16_t divisor) {
   if (QCMode == QCState::NOT_STARTED)
     startQC(divisor);
 
-  if (Vx10 < 45)
+  if (Vx10 < 40) // Bail out if less than 4V
     return;
+
   if (xTaskGetTickCount() < TICKS_SECOND)
     return;
-#ifdef POW_QC_20V
-  if (Vx10 > 200)
-    Vx10 = 200; // Cap max value at 20V
-#else
-  if (Vx10 > 130)
-    Vx10 = 130; // Cap max value at 13V
 
-#endif
   // Seek the QC to the Voltage given if this adapter supports continuous mode
   // try and step towards the wanted value
 
   // 1. Measure current voltage
-  int16_t vStart     = getInputVoltageX10(divisor, 1);
+  int16_t vStart     = getInputVoltageX10(divisor, 0);
   int     difference = Vx10 - vStart;
 
   // 2. calculate ideal steps (0.2V changes)
 
   int steps = difference / 2;
   if (QCMode == QCState::QC_3) {
-    if (steps > -2 && steps < 2)
-      return; // dont bother with small steps
     while (steps < 0) {
       QC_SeekContNeg();
       vTaskDelay(3 * TICKS_10MS);
@@ -94,7 +86,7 @@ void    seekQC(int16_t Vx10, uint16_t divisor) {
 #ifdef ENABLE_QC2
   // Re-measure
   /* Disabled due to nothing to test and code space of around 1k*/
-  steps = vStart - getInputVoltageX10(divisor, 1);
+  steps = vStart - getInputVoltageX10(divisor, 0);
   if (steps < 0)
     steps = -steps;
   if (steps > 4) {
@@ -118,7 +110,7 @@ void    seekQC(int16_t Vx10, uint16_t divisor) {
 void startQC(uint16_t divisor) {
   // Pre check that the input could be >5V already, and if so, dont both
   // negotiating as someone is feeding in hv
-  if (getInputVoltageX10(divisor, 1) > 80) {
+  if (getInputVoltageX10(divisor, 0) > 80) {
     QCTries = 11;
     QCMode  = QCState::NO_QC;
     return;
@@ -160,7 +152,7 @@ void startQC(uint16_t divisor) {
     // Wait for frontend ADC to stabilise
     QCMode = QCState::QC_2;
     for (uint8_t i = 0; i < 10; i++) {
-      if (getInputVoltageX10(divisor, 1) > 80) {
+      if (getInputVoltageX10(divisor, 0) > 80) {
         // yay we have at least QC2.0 or QC3.0
         QCMode = QCState::QC_3; // We have at least QC2, pray for 3
         return;

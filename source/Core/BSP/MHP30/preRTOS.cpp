@@ -7,11 +7,10 @@
 
 #include "BSP.h"
 #include "I2CBB.hpp"
-#include "Model_Config.h"
 #include "Pins.h"
 #include "Setup.h"
-#include "fusbpd.h"
 #include <I2C_Wrapper.hpp>
+
 void preRToSInit() {
   /* Reset of all peripherals, Initializes the Flash interface and the Systick.
    */

@@ -8,7 +8,7 @@
 #ifndef BSP_MINIWARE_SOFTWARE_I2C_H_
 #define BSP_MINIWARE_SOFTWARE_I2C_H_
 #include "BSP.h"
-#include "Model_Config.h"
+#include "configuration.h"
 #include "stm32f1xx_hal.h"
 #ifdef I2C_SOFT
 
@@ -20,11 +20,12 @@
 #define SOFT_SCL_READ() (HAL_GPIO_ReadPin(SCL2_GPIO_Port, SCL2_Pin) == GPIO_PIN_SET ? 1 : 0)
 #define SOFT_I2C_DELAY()              \
   {                                   \
-    for (int xx = 0; xx < 40; xx++) { \
+    for (int xx = 0; xx < 15; xx++) { \
       asm("nop");                     \
     }                                 \
   }
 
 #endif
+// 40 ~= 100kHz; 15 gives around 250kHz or so which is fast _and_ stable
 
 #endif /* BSP_MINIWARE_SOFTWARE_I2C_H_ */

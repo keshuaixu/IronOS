@@ -6,25 +6,19 @@
 		"latin_extended"
 	],
 	"messages": {
-		"SettingsCalibrationDone": "Calibrazione effettuata",
-		"SettingsCalibrationWarning": "Assicurati che la punta si trovi a temperatura ambiente prima di continuare!",
+		"SettingsCalibrationWarning": "Assicurarsi che la punta si trovi a temperatura ambiente prima di continuare!",
 		"SettingsResetWarning": "Ripristinare le impostazioni iniziali?",
 		"UVLOWarningString": "DC BASSA",
 		"UndervoltageString": "DC INSUFFICIENTE",
-		"InputVoltageString": "V ingresso:",
-		"WarningTipTempString": "Temp punta:",
-		"BadTipString": "PUNTA KO",
+		"InputVoltageString": "V in:",
 		"SleepingSimpleString": "Zzz ",
 		"SleepingAdvancedString": "Riposo",
-		"WarningSimpleString": "HOT!",
-		"WarningAdvancedString": "PUNTA CALDA!",
 		"SleepingTipAdvancedString": "Punta:",
 		"IdleTipString": "T punta:",
 		"IdleSetString": "/",
 		"TipDisconnectedString": "PUNTA ASSENTE",
 		"SolderingAdvancedPowerPrompt": "Potenz:",
-		"OffString": "OFF",
-		"YourGainMessage": "Guad.: "
+		"OffString": "OFF"
 	},
 	"messagesWarn": {
 		"ResetOKMessage": "Reset OK",
@@ -37,13 +31,16 @@
 			"non rilevato"
 		],
 		"NoPowerDeliveryMessage": [
-			"USB-PD non",
-			"disponibile"
+			"USB PD",
+			"non rilevato"
 		],
 		"LockingKeysString": "Blocc.",
 		"UnlockingKeysString": "Sblocc.",
 		"WarningKeysLockedString": "BLOCCATO",
-		"WarningThermalRunaway":["Thermal","Runaway"]
+		"WarningThermalRunaway": [
+			"Temperatura",
+			"fuori controllo"
+		]
 	},
 	"characters": {
 		"SettingRightChar": "D",
@@ -64,7 +61,7 @@
 		"SettingLockDisableChar": "D",
 		"SettingLockBoostChar": "T",
 		"SettingLockFullChar": "C",
-		"SettingNAChar": "NA"
+		"SettingNAChar": " NA"
 	},
 	"menuGroups": {
 		"PowerMenu": {
@@ -156,9 +153,9 @@
 		"DisplayRotation": {
 			"text2": [
 				"Orientamento",
-				"display"
+				"schermo"
 			],
-			"desc": "Imposta l'orientamento del display [D: mano destra; S: mano sinistra; A: automatico]"
+			"desc": "Imposta l'orientamento dello schermo [D: mano destra; S: mano sinistra; A: automatico]"
 		},
 		"BoostTemperature": {
 			"text2": [
@@ -193,7 +190,7 @@
 				"Ripristino",
 				"impostazioni"
 			],
-			"desc": "Ripristina tutte le impostazioni"
+			"desc": "Ripristina le impostazioni allo stato iniziale"
 		},
 		"VoltageCalibration": {
 			"text2": [
@@ -221,15 +218,15 @@
 				"Voltaggio",
 				"QC"
 			],
-			"desc": "Imposta il massimo voltaggio negoziabile con un alimentatore Quick Charge"
+			"desc": "Imposta il massimo voltaggio negoziabile con un alimentatore Quick Charge [volt]"
 		},
 		"PDNegTimeout": {
-                        "text2": [
-                                "PD",
-                                "timeout"
-                        ],
-                        "desc": "PD negotiation timeout in 100ms steps for compatibility with some QC chargers (0: disabled)"
-                },
+			"text2": [
+				"Abilitazione",
+				"USB PD"
+			],
+			"desc": "Regola il massimo tempo utile per la negoziazione del protocollo USB Power Delivery con alimentatori compatibili [0: disattiva; multipli di 100 ms]"
+		},
 		"PowerLimit": {
 			"text2": [
 				"Limite",
@@ -249,14 +246,14 @@
 				"Temp passo",
 				"breve"
 			],
-			"desc": "Imposta il \"passo\" dei valori di temperatura per una breve pressione dei tasti"
+			"desc": "Imposta il passo dei valori di temperatura per una breve pressione dei tasti"
 		},
 		"TempChangeLongStep": {
 			"text2": [
 				"Temp passo",
 				"lungo"
 			],
-			"desc": "Imposta il \"passo\" dei valori di temperatura per una lunga pressione dei tasti"
+			"desc": "Imposta il passo dei valori di temperatura per una lunga pressione dei tasti"
 		},
 		"PowerPulsePower": {
 			"text2": [
@@ -267,7 +264,7 @@
 		},
 		"HallEffSensitivity": {
 			"text2": [
-				"Effetto",
+				"Sensore",
 				"Hall"
 			],
 			"desc": "Regola la sensibilità alla rilevazione di supporti metallici per entrare in modalità Riposo [O: OFF; B: bassa; M: media; A: alta]"
@@ -317,9 +314,23 @@
 		"LanguageSwitch": {
 			"text2": [
 				"Lingua:",
-				" IT    Italiano"
+				" IT Italiano"
 			],
-			"desc": ""
+			"desc": "Imposta la lingua del dispositivo"
+		},
+		"Brightness": {
+			"text2": [
+				"Luminosità",
+				"schermo"
+			],
+			"desc": "Regola la luminosità dello schermo [1: minimo; 10: massimo]"
+		},
+		"ColourInversion": {
+			"text2": [
+				"Inverti",
+				"colori"
+			],
+			"desc": "Inverti i colori dello schermo"
 		}
 	}
 }

@@ -5,11 +5,12 @@
  *      Author: Ralim
  */
 #include "BSP.h"
-#include "Model_Config.h"
 #include "Pins.h"
 #include "QC3.h"
 #include "Settings.h"
+#include "configuration.h"
 #include "stm32f1xx_hal.h"
+
 #ifdef POW_QC
 void QC_DPlusZero_Six() {
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET); // pull down D+
@@ -70,7 +71,6 @@ uint8_t QC_DM_PulledDown() { return HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_11) == GPIO
 #endif
 void QC_resync() {
 #ifdef POW_QC
-  seekQC((systemSettings.QCIdealVoltage) ? 120 : 90,
-         systemSettings.voltageDiv); // Run the QC seek again if we have drifted too much
+  seekQC(systemSettings.QCIdealVoltage, systemSettings.voltageDiv); // Run the QC seek again if we have drifted too much
 #endif
 }

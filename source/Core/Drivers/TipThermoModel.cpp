@@ -41,10 +41,10 @@ uint32_t          TipThermoModel::convertTipRawADCTouV(uint16_t rawADC, bool ski
   // Now to divide this down by the gain
   valueuV /= OP_AMP_GAIN_STAGE;
 
-  if (systemSettings.CalibrationOffset && skipCalOffset == false) {
+  if (getSettingValue(SettingsOptions::CalibrationOffset) && skipCalOffset == false) {
     // Remove uV tipOffset
-    if (valueuV > systemSettings.CalibrationOffset)
-      valueuV -= systemSettings.CalibrationOffset;
+    if (valueuV > getSettingValue(SettingsOptions::CalibrationOffset))
+      valueuV -= getSettingValue(SettingsOptions::CalibrationOffset);
     else
       valueuV = 0;
   }
@@ -71,15 +71,12 @@ uint32_t TipThermoModel::convertFtoC(uint32_t degF) {
 }
 uint32_t TipThermoModel::getTipInC(bool sampleNow) {
   int32_t currentTipTempInC = TipThermoModel::convertTipRawADCToDegC(getTipRawTemp(sampleNow));
-  currentTipTempInC += getHandleTemperature() / 10; // Add handle offset
-                                                    // Power usage indicates that our tip temp is lower than our thermocouple temp.
-                                                    // I found a number that doesn't unbalance the existing PID, causing overshoot.
-                                                    // This could be tuned in concert with PID parameters...
-#ifdef THERMAL_MASS_OVERSHOOTS
-  currentTipTempInC += x10WattHistory.average() / 25;
-#else
-  currentTipTempInC -= x10WattHistory.average() / 25;
-#endif
+  currentTipTempInC += getHandleTemperature(sampleNow) / 10; // Add handle offset
+
+  // Power usage indicates that our tip temp is lower than our thermocouple temp.
+  // I found a number that doesn't unbalance the existing PID, causing overshoot.
+  // This could be tuned in concert with PID parameters...
+
   if (currentTipTempInC < 0)
     return 0;
   return currentTipTempInC;
@@ -92,7 +89,7 @@ uint32_t TipThermoModel::getTipInF(bool sampleNow) {
 }
 
 uint32_t TipThermoModel::getTipMaxInC() {
-  uint32_t maximumTipTemp = TipThermoModel::convertTipRawADCToDegC(0x7FFF - (21 * 5)); // back off approx 5 deg c from ADC max
-  maximumTipTemp += getHandleTemperature() / 10;                                       // Add handle offset
+  uint32_t maximumTipTemp = TipThermoModel::convertTipRawADCToDegC(0x7FFF - (21 * 3)); // back off approx 5 deg c from ADC max
+  maximumTipTemp += getHandleTemperature(0) / 10;                                      // Add handle offset
   return maximumTipTemp - 1;
 }

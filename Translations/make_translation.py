@@ -3,6 +3,7 @@
 import argparse
 import functools
 import json
+import hashlib
 import logging
 import os
 import pickle
@@ -39,6 +40,16 @@ def load_json(filename: str, skip_first_line: bool) -> dict:
         if skip_first_line:
             f.readline()
         return json.loads(f.read())
+
+
+def get_language_unqiue_id(language_ascii_name: str):
+    """
+    Given a language code, it will return a unique (enough) uint16_t id code
+    When we have a collision here we can tweak this, but language list should be fairly stable from now on
+    """
+    return (
+        int(hashlib.sha1(language_ascii_name.encode("utf-8")).hexdigest(), 16) % 0xFFFF
+    )
 
 
 def read_translation(json_root: Union[str, Path], lang_code: str) -> dict:
@@ -113,9 +124,29 @@ def get_debug_menu() -> List[str]:
         "CTip ",
         "CHan ",
         "Vin  ",
-        "PCB  ",
+        "ACC  ",
         "PWR  ",
         "Max  ",
+    ]
+
+
+def get_accel_names_list() -> List[str]:
+    return [
+        "Scanning",
+        "None",
+        "MMA8652FC",
+        "LIS2DH12",
+        "BMA223",
+        "MSA301",
+        "SC7A20",
+    ]
+
+
+def get_power_source_list() -> List[str]:
+    return [
+        "DC",
+        "QC",
+        "PD",
     ]
 
 
@@ -178,6 +209,8 @@ def get_letter_counts(
     for x in constants:
         text_list.append(x[1])
     text_list.extend(get_debug_menu())
+    text_list.extend(get_accel_names_list())
+    text_list.extend(get_power_source_list())
 
     # collapse all strings down into the composite letters and store totals for these
 
@@ -868,10 +901,10 @@ def write_languages(
         f.write("const LanguageMeta LanguageMetas[] = {\n")
         for lang in data.langs:
             lang_code = lang["languageCode"]
+            lang_id = get_language_unqiue_id(lang_code)
             f.write(
                 "  {\n"
-                # NOTE: Cannot specify C99 designator here due to GCC (g++) bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55227
-                f'    /* .code = */ "{lang_code}",\n'
+                f"    .uniqueID = {lang_id},\n"
                 f"    .translation_data = reinterpret_cast<const uint8_t *>(&translation_{lang_code}),\n"
                 f"    .translation_size = sizeof(translation_{lang_code}),\n"
                 f"    .translation_is_compressed = false,\n"
@@ -898,10 +931,10 @@ def write_languages(
         f.write("const LanguageMeta LanguageMetas[] = {\n")
         for lang in data.langs:
             lang_code = lang["languageCode"]
+            lang_id = get_language_unqiue_id(lang_code)
             f.write(
                 "  {\n"
-                # NOTE: Cannot specify C99 designator here due to GCC (g++) bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55227
-                f'    /* .code = */ "{lang_code}",\n'
+                f"    .uniqueID = {lang_id},\n"
                 f"    .translation_data = translation_data_brieflz_{lang_code},\n"
                 f"    .translation_size = sizeof(translation_data_brieflz_{lang_code}),\n"
                 f"    .translation_is_compressed = true,\n"
@@ -937,6 +970,25 @@ def get_translation_common_text(
             f'\t "{convert_string(symbol_conversion_table, c)}",//{c} \n'
         )
     translation_common_text += "};\n\n"
+
+    # accel names
+    translation_common_text += "const char* AccelTypeNames[] = {\n"
+
+    for c in get_accel_names_list():
+        translation_common_text += (
+            f'\t "{convert_string(symbol_conversion_table, c)}",//{c} \n'
+        )
+    translation_common_text += "};\n\n"
+
+    # power source types
+    translation_common_text += "const char* PowerSourceNames[] = {\n"
+
+    for c in get_power_source_list():
+        translation_common_text += (
+            f'\t "{convert_string(symbol_conversion_table, c)}",//{c} \n'
+        )
+    translation_common_text += "};\n\n"
+
     return translation_common_text
 
 

@@ -6,44 +6,41 @@
 		"latin_extended"
 	],
 	"messages": {
-		"SettingsCalibrationDone": "Kalibrácia hotová!",
 		"SettingsCalibrationWarning": "Najprv sa prosím uistite, že hrot má izbovú teplotu!",
-		"SettingsResetWarning": "Naozaj chcete obnovit továrenské nastavenia?",
+		"SettingsResetWarning": "Naozaj chcete obnoviť továrenské nastavenia?",
 		"UVLOWarningString": "Nízke U!",
 		"UndervoltageString": "Nízke napätie",
 		"InputVoltageString": "Vstupné U: ",
-		"WarningTipTempString": "Tep. hrotu: ",
-		"BadTipString": "ZLÝ HROT",
 		"SleepingSimpleString": "Chrr",
 		"SleepingAdvancedString": "Pokojový režim..",
-		"WarningSimpleString": "PÁLI",
-		"WarningAdvancedString": "HROT JE HORÚCI !",
 		"SleepingTipAdvancedString": "Hrot:",
 		"IdleTipString": "Hrot:",
 		"IdleSetString": "Cieľ:",
 		"TipDisconnectedString": "HROT ODPOJENÝ",
 		"SolderingAdvancedPowerPrompt": "Výkon: ",
-		"OffString": "Vyp",
-		"YourGainMessage": "Zisk:"
+		"OffString": "Vyp"
 	},
 	"messagesWarn": {
 		"ResetOKMessage": "Reset OK",
 		"SettingsResetMessage": [
-			"Tov. nas. obnov.",
-			""
+			"Nastavenia",
+			"resetované"
 		],
 		"NoAccelerometerMessage": [
-			"Bez pohyb. senz.",
-			""
+			"Bez pohybového",
+			"senzora!"
 		],
 		"NoPowerDeliveryMessage": [
-			"Chýba čip USB-PD",
-			""
+			"Chýba čip",
+			"USB-PD!"
 		],
 		"LockingKeysString": "ZABLOK.",
 		"UnlockingKeysString": "ODBLOK.",
 		"WarningKeysLockedString": "!ZABLOK!",
-		"WarningThermalRunaway":["Thermal","Runaway"]
+		"WarningThermalRunaway": [
+			"Únik",
+			"Tepla"
+		]
 	},
 	"characters": {
 		"SettingRightChar": "P",
@@ -51,7 +48,7 @@
 		"SettingAutoChar": "A",
 		"SettingOffChar": "Z",
 		"SettingSlowChar": "P",
-		"SettingMediumChar": "M",
+		"SettingMediumChar": "S",
 		"SettingFastChar": "R",
 		"SettingStartNoneChar": "V",
 		"SettingStartSolderingChar": "Z",
@@ -69,10 +66,10 @@
 	"menuGroups": {
 		"PowerMenu": {
 			"text2": [
-				"Power",
-				"settings"
+				"Nastavenie",
+				"výkonu"
 			],
-			"desc": "Power settings"
+			"desc": "Nastavenie výkonu"
 		},
 		"SolderingMenu": {
 			"text2": [
@@ -218,18 +215,18 @@
 		},
 		"QCMaxVoltage": {
 			"text2": [
-				"Obmedzenie",
-				"výkonu"
+				"Obmedzenie QC",
+				"napätia"
 			],
-			"desc": "Obmedzenie výkonu podľa použitého zdroja"
+			"desc": "Maximálne QC napätie ktoré si má systém vyžiadať"
 		},
 		"PDNegTimeout": {
-                        "text2": [
-                                "PD",
-                                "timeout"
-                        ],
-                        "desc": "PD negotiation timeout in 100ms steps for compatibility with some QC chargers (0: disabled)"
-                },
+			"text2": [
+				"Čas vypršania",
+				"Power Delivery"
+			],
+			"desc": "Čas vyjednávania Power Delivery v 100ms krokoch pre kompatibilitu s niektorými QC nabíjačkami (0: vypnuté)"
+		},
 		"PowerLimit": {
 			"text2": [
 				"Obmedzenie",
@@ -270,7 +267,7 @@
 				"Citliv.",
 				"Hall"
 			],
-			"desc": "Citlivosť Halloveho senzora pre detekciu spánku (Z=Zakázať | N=Nízka | S=Stredná | V=Vysoká)"
+			"desc": "Citlivosť Hallovho senzora pre detekciu spánku (Z=Zakázať | N=Nízka | S=Stredná | V=Vysoká)"
 		},
 		"LockingMode": {
 			"text2": [
@@ -281,45 +278,59 @@
 		},
 		"MinVolCell": {
 			"text2": [
-				"Minimum",
-				"voltage"
+				"Minimálne",
+				"napätie"
 			],
-			"desc": "Minimum allowed voltage per cell (3S: 3 - 3.7V | 4-6S: 2.4 - 3.7V)"
+			"desc": "Minimálne napätie povolené na jeden článok (3S: 3 - 3.7V | 4-6S: 2.4 - 3.7V)"
 		},
 		"AnimLoop": {
 			"text2": [
-				"Anim.",
-				"loop"
+				"Opakovanie",
+				"animácií"
 			],
-			"desc": "Loop icon animations in root menu"
+			"desc": "Opakovanie animácií ikoniek v hlavnom menu"
 		},
 		"AnimSpeed": {
 			"text2": [
-				"Anim.",
-				"speed"
+				"Rýchlosť",
+				"animácií"
 			],
-			"desc": "Speed of icon animations in menu (O=off | L=low | M=medium | H=high)"
+			"desc": "Rýchlosť animácií ikoniek v menu (O=off | P=pomaly | S=stredne | R=rýchlo)"
 		},
 		"PowerPulseWait": {
 			"text2": [
-				"Power pulse",
-				"wait time"
+				"Interval",
+				"impulzu"
 			],
-			"desc": "Time to wait before triggering every keep-awake pulse (x 2.5s)"
+			"desc": "Interval medzi impulzami udržujúcimi napájací zdroj zapnutý (x 2.5s)"
 		},
 		"PowerPulseDuration": {
 			"text2": [
-				"Power pulse",
-				"duration"
+				"Dĺžka impulzu",
+				""
 			],
-			"desc": "Keep-awake-pulse duration (x 250ms)"
+			"desc": "Dĺžka impulzu udržujúci napájací zdroj zapnutý (x 250ms)"
 		},
 		"LanguageSwitch": {
 			"text2": [
 				"Jazyk:",
 				" SK  Slovenčina"
 			],
-			"desc": ""
+			"desc": "Aktuálny jazyk"
+		},
+		"Brightness": {
+			"text2": [
+				"Jas",
+				"obrazovky"
+			],
+			"desc": "Mení jas/kontrast OLED displeja"
+		},
+		"ColourInversion": {
+			"text2": [
+				"Invertovať",
+				"obrazovku"
+			],
+			"desc": "Invertovať farby OLED displeja"
 		}
 	}
 }

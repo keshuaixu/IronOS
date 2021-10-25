@@ -31,7 +31,8 @@ HOST_CC := gcc
 endif
 HOST_OUTPUT_DIR=Objects/host
 
-
+DEVICE_DFU_ADDRESS=0x08000000
+DEVICE_DFU_VID_PID=0x28E9:0x0189
 # Enumerate all of the include directories
 APP_INC_DIR = ./Core/Inc
 BRIEFLZ_INC_DIR = ./Core/brieflz
@@ -58,7 +59,6 @@ BSP_INC_DIR = ./Core/BSP
 THREADS_INC_DIR = ./Core/Threads
 PINE_INC_DIR = ./Core/BSP/Pine64
 PINE_VENDOR_INC_DIR = ./Core/BSP/Pine64/Vendor/SoC/gd32vf103/Common/Include
-PINE_BOARD_INC_DIR = ./Core/BSP/Pine64/Vendor/SoC/gd32vf103/Board/pinecil/Include
 PINE_VENDOR_USB_INC_DIR = ./Core/BSP/Pine64/Vendor/SoC/gd32vf103/Common/Include/Usb
 PINE_NMSIS_INC_DIR = ./Core/BSP/Pine64/Vendor/NMSIS/Core/Include
 PINE_FREERTOS_PORT_INC_DIR = ./Core/BSP/Pine64/Vendor/OS/FreeRTOS/Source/portable/GCC
@@ -66,12 +66,14 @@ SOURCE_THREADS_DIR = ./Core/Threads
 SOURCE_CORE_DIR = ./Core/Src
 SOURCE_BRIEFLZ_DIR = ./Core/brieflz
 SOURCE_DRIVERS_DIR = ./Core/Drivers
-INC_PD_DRIVERS_DIR = ./Core/Drivers/FUSB302
+INC_PD_DRIVERS_DIR = ./Core/Drivers/usb-pd/include
+PD_DRIVER_TESTS_DIR = ./Core/Drivers/usb-pd/tests
+PD_DRIVER_DIR = ./Core/Drivers/usb-pd
 SOURCE_MIDDLEWARES_DIR = ./Middlewares
 # Find-all's used for formatting
-ALL_INCLUDES = $(shell find ./Core -path $(BRIEFLZ_INC_DIR) -prune -false -o \( -type f \( -name '*.h' -o -name '*.hpp' \) \) )
+ALL_INCLUDES = $(shell find ./Core -type d \( -path $(BRIEFLZ_INC_DIR) -o -path $(PD_DRIVER_DIR) \)  -prune -false -o \( -type f \( -name '*.h' -o -name '*.hpp' \) \) )
 
-ALL_SOURCE = $(shell find ./Core -path $(SOURCE_BRIEFLZ_DIR) -prune -false -o \( -type f \( -name '*.c' -o -name '*.cpp' \) \) )
+ALL_SOURCE = $(shell find ./Core -type d  \( -path $(SOURCE_BRIEFLZ_DIR) -o -path $(PD_DRIVER_DIR) \) -prune -false -o \( -type f \( -name '*.c' -o -name '*.cpp' \) \) )
 
 # Device dependent settings
 ifeq ($(model),$(filter $(model),$(ALL_MINIWARE_MODELS)))
@@ -100,6 +102,8 @@ CPUFLAGS= -mcpu=cortex-m3     \
 		  -mfloat-abi=soft
 flash_size=64k
 bootldr_size=0x4000
+DEVICE_DFU_ADDRESS=0x08004000
+DEVICE_DFU_VID_PID=0x1209:0xDB42
 endif
 
 ifeq ($(model),$(filter $(model),$(ALL_MHP30_MODELS)))
@@ -128,12 +132,13 @@ CPUFLAGS= -mcpu=cortex-m3     \
 		  -mfloat-abi=soft
 flash_size=128k
 bootldr_size=32k
+DEVICE_DFU_ADDRESS=0x08008000
+DEVICE_DFU_VID_PID=0x1209:0xDB42
 endif
 ifeq ($(model),$(ALL_PINE_MODELS))
 $(info Building for Pine64 )
 DEVICE_INCLUDES = -I$(PINE_INC_DIR) \
 -I$(PINE_VENDOR_INC_DIR) \
--I$(PINE_BOARD_INC_DIR) \
 -I$(PINE_VENDOR_USB_INC_DIR) \
 -I$(PINE_NMSIS_INC_DIR) \
 -I$(PINE_FREERTOS_PORT_INC_DIR) 
@@ -173,9 +178,10 @@ $(shell find $(SOURCE_DRIVERS_DIR) -type f -name '*.c') \
 $(shell find $(DEVICE_BSP_DIR) -type f -name '*.c') \
 $(shell find $(SOURCE_MIDDLEWARES_DIR) -type f -name '*.c') \
 $(SOURCE_BRIEFLZ_DIR)/depack.c
+# We exclude the USB-PD stack tests $(PD_DRIVER_TESTS_DIR)
 SOURCE_CPP := $(shell find $(SOURCE_THREADS_DIR) -type f -name '*.cpp') \
 $(shell find $(SOURCE_CORE_DIR) -type f -name '*.cpp') \
-$(shell find $(SOURCE_DRIVERS_DIR) -type f -name '*.cpp') \
+$(shell find $(SOURCE_DRIVERS_DIR) -path $(PD_DRIVER_TESTS_DIR) -prune -false -o -type f -name '*.cpp') \
 $(shell find $(DEVICE_BSP_DIR) -type f -name '*.cpp') \
 $(shell find $(SOURCE_MIDDLEWARES_DIR) -type f -name '*.cpp')
 # output folder
@@ -336,7 +342,7 @@ OUT_OBJS_S=$(addprefix $(OUTPUT_DIR)/,$(OBJS_S))
 
 default : firmware-EN
 
-firmware-%: $(HEXFILE_DIR)/$(model)_%.hex $(HEXFILE_DIR)/$(model)_%.bin
+firmware-%: $(HEXFILE_DIR)/$(model)_%.hex $(HEXFILE_DIR)/$(model)_%.bin $(HEXFILE_DIR)/$(model)_%.dfu
 	@true
 
 ALL_FIRMWARE_TARGETS=$(addprefix firmware-,$(ALL_LANGUAGES))
@@ -353,6 +359,9 @@ all: $(ALL_FIRMWARE_TARGETS)
 %.bin : %.elf Makefile
 	$(SIZE)  --format=berkeley  $<
 	$(OBJCOPY) $< -O binary $@
+
+%.dfu : %.bin Makefile
+	python3 dfuse-pack.py -b $(DEVICE_DFU_ADDRESS)@0:$< -D $(DEVICE_DFU_VID_PID) $@
 
 $(HEXFILE_DIR)/$(model)_%.elf : \
 		$(OUT_OBJS_S) $(OUT_OBJS) $(OUT_OBJS_CPP) \
@@ -521,7 +530,7 @@ $(foreach group_code,$(LANGUAGE_GROUPS),$(eval $(call multi_lang_rule,$(group_co
 clean :
 	rm -Rf Core/Gen
 	rm -Rf $(OUTPUT_DIR_BASE)
-	rm -Rf $(HEXFILE_DIR)
+	rm -Rf $(HEXFILE_DIR)/*
 
 style:
 	@for src in $(ALL_SOURCE) $(ALL_INCLUDES); do \

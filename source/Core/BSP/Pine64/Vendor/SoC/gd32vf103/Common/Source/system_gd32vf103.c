@@ -23,7 +23,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "nuclei_sdk_hal.h"
+#include "gd32vf103.h"
+#include "gd32vf103_rcu.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -118,7 +119,7 @@ static void system_clock_108m_hxtal(void) {
   /* APB2 = AHB/1 */
   RCU_CFG0 |= RCU_APB2_CKAHB_DIV1;
   /* APB1 = AHB/2 */
-  RCU_CFG0 |= RCU_APB1_CKAHB_DIV2;
+  RCU_CFG0 |= RCU_APB1_CKAHB_DIV4;
 
   /* CK_PLL = (CK_PREDIV0) * 27 = 108 MHz */
   RCU_CFG0 &= ~(RCU_CFG0_PLLMF | RCU_CFG0_PLLMF_4);

@@ -10,7 +10,7 @@
 #ifndef OLED_HPP_
 #define OLED_HPP_
 #include "Font.h"
-#include "Model_Config.h"
+#include "configuration.h"
 #include <BSP.h>
 #include <stdbool.h>
 #include <string.h>
@@ -62,6 +62,8 @@ public:
   static void setRotation(bool leftHanded); // Set the rotation for the screen
   // Get the current rotation of the LCD
   static bool    getRotation() { return inLeftHandedMode; }
+  static void    setBrightness(uint8_t contrast);
+  static void    setInverseDisplay(bool inverted);
   static int16_t getCursorX() { return cursor_x; }
   static void    print(const char *string, FontStyle fontStyle); // Draw a string to the current location, with selected font
   static void    printWholeScreen(const char *string);

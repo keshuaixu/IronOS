@@ -9,8 +9,8 @@
 #include "Settings.h"
 #include "cmsis_os.h"
 #include "power.hpp"
-uint8_t DetectedAccelerometerVersion = 0;
-bool    settingsWereReset            = false;
+AccelType DetectedAccelerometerVersion = AccelType::Scanning;
+bool      settingsWereReset            = false;
 // FreeRTOS variables
 
 osThreadId          GUITaskHandle;
@@ -40,7 +40,7 @@ int main(void) {
   setTipX10Watts(0); // force tip off
   resetWatchdog();
   // Testing for which accelerometer is mounted
-  settingsWereReset = restoreSettings(); // load the settings from flash
+  settingsWereReset = loadSettings(); // load the settings from flash
   resetWatchdog();
   /* Create the thread(s) */
 
@@ -48,7 +48,7 @@ int main(void) {
   osThreadStaticDef(PIDTask, startPIDTask, osPriorityRealtime, 0, PIDTaskStackSize, PIDTaskBuffer, &PIDTaskControlBlock);
   PIDTaskHandle = osThreadCreate(osThread(PIDTask), NULL);
 
-  /* definition and creation of POWTask - Power management for QC */
+  /* definition and creation of POWTask - Power management for QC / PD */
   osThreadStaticDef(POWTask, startPOWTask, osPriorityAboveNormal, 0, POWTaskStackSize, POWTaskBuffer, &POWTaskControlBlock);
   POWTaskHandle = osThreadCreate(osThread(POWTask), NULL);
 

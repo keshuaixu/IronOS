@@ -12,9 +12,11 @@ static uint8_t selectedLangIndex = 255;
 
 static void initSelectedLanguageIndex() {
   if (selectedLangIndex == 255) {
-    const char *lang = const_cast<char *>(systemSettings.uiLanguage);
+
+    const uint16_t wantedLanguageID = getSettingValue(SettingsOptions::UILanguage);
+
     for (size_t i = 0; i < LanguageCount; i++) {
-      if (strncmp(lang, LanguageMetas[i].code, sizeof(systemSettings.uiLanguage)) == 0) {
+      if (LanguageMetas[i].uniqueID == wantedLanguageID) {
         selectedLangIndex = i;
         return;
       }
@@ -24,10 +26,7 @@ static void initSelectedLanguageIndex() {
   }
 }
 
-static void writeSelectedLanguageToSettings() {
-  char *lang = const_cast<char *>(systemSettings.uiLanguage);
-  strncpy(lang, LanguageMetas[selectedLangIndex].code, sizeof(systemSettings.uiLanguage));
-}
+static void writeSelectedLanguageToSettings() { setSettingValue(SettingsOptions::UILanguage, LanguageMetas[selectedLangIndex].uniqueID); }
 
 void prepareTranslations() {
   initSelectedLanguageIndex();
@@ -86,7 +85,5 @@ bool settings_setLanguageSwitch(void) {
   return selectedLangIndex == (LanguageCount - 1);
 }
 
-bool settings_displayLanguageSwitch(void) {
-  OLED::printWholeScreen(translatedString(Tr->SettingsShortNames[static_cast<uint8_t>(SettingsItemIndex::LanguageSwitch)]));
-  return false;
-}
+bool settings_showLanguageSwitch(void) { return true; }
+void settings_displayLanguageSwitch(void) { OLED::printWholeScreen(translatedString(Tr->SettingsShortNames[static_cast<uint8_t>(SettingsItemIndex::LanguageSwitch)])); }

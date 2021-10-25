@@ -20,7 +20,7 @@ Then this works the same as a production release (use the correct file).
 
 ## Miniware irons (TS100, TS80, TS80P)
 
-This is completely safe, but if it goes wrong just put the .hex file from the official website onto the unit and you're back to the old firmware. Downloads for the hex files to flash are available on the [releases page.](https://github.com/Ralim/IronOS/releases) The file you want is called _(MODEL)\_EN.hex_ unless you want the translations, they are (MODEL)\__language short name_.hex. Where (MODEL) is either TS100 or TS80.
+This is completely safe, but if it goes wrong just put the .hex file from the [official website](http://www.miniware.com.cn/product-category/soldering-pen/electric-soldering-kit/) onto the unit and you're back to the old firmware. Downloads for the hex files to flash are available on the [releases page.](https://github.com/Ralim/IronOS/releases) The file you want is called _(MODEL)\_EN.hex_ unless you want the translations, they are (MODEL)\__language short name_.hex. Where (MODEL) is either TS100 or TS80.
 
 Officially the bootloader on the iron only works under Windows (use the built-in File Explorer, as alternative file managers or copy handlers like Teracopy will fail). However, users have reported that it does work under Mac, and can be made to work under Linux _sometimes_. Details over on the [wiki page](https://github.com/Ralim/ts100/wiki/Upgrading-Firmware).
 
@@ -83,9 +83,12 @@ Check the extension of your firmware, it should be `.RDY` now.
 ## Pinecil (Pine64)
 
 The MCU used in the Pinecil supports usb-dfu.
+
 To enter DFU mode, hold the button at the back of the iron while connecting to usb over usb-c.
 Generally all usb controllers work, but some hubs have issues so avoiding hubs may be best.
+
 Once the device is connected while holding the button, the screen will stay **off**.
+
 This is normal, and then you can use the appropriate tool to load the .hex or .bin file as per your OS.
 
 You can also refer to the Pine64 [Wiki](https://wiki.pine64.org/wiki/Pinecil).
@@ -95,15 +98,20 @@ You can also refer to the Pine64 [Wiki](https://wiki.pine64.org/wiki/Pinecil).
 Using `dfu-util` you can flash the firmware using a command line as such:
 
 ```
-dfu-util -d 28e9:0189 -a 0 -D Pinecil_EN.bin -s 0x08000000:mass-erase:force
+dfu-util -D Pinecil_EN.dfu
 ```
 
 ### Windows
 
 For windows the easiest tool to use is the vendors gui tool from [here](http://www.gd32mcu.com/download/down/document_id/176/path_type/1).
+
 Should the link break, its called "GD32 MCU Dfu Tool" and can be grabbed from http://www.gd32mcu.com/en/download/.
+
 You will also need the matching drivers from [here](http://www.gd32mcu.com/download/down/document_id/244/path_type/1) installed if you have not used gigadevice parts before.
+
 These are called "GD32 Dfu Drivers" if the link breaks.
+
+You can also use dfu-util if you wish to set it up, but that is better documented by others
 
 ### FAQ
 
